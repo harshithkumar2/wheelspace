@@ -1,0 +1,79 @@
+{% extends "layout.html" %}
+<!--title part-->
+{% block title %}Staff Login{% endblock %}
+<!--head part-->
+{% block head %}
+{{ super() }}
+<style>
+  #input{
+      margin-left: 10px;
+  }
+  .card{
+    margin-top:70px;
+    border-top-left-radius: 25px;
+    border-bottom-right-radius: 25px;
+    border:solid 1px #26A69A;
+  }
+  .card:hover{
+    box-shadow: 0 0 5px 5px #888;
+    transition:ease .5s;
+  }
+  .card-header{
+      background-color: #26A69A;
+      text-align: center;
+      color: white;
+      font-size: 20px;
+      border:solid 1px #26A69A;
+    }
+    #button{
+        color:black;font-weight:bold;background-color:#80CBC4;width:180px; border-top-left-radius: 20px;
+        border-bottom-right-radius: 20px;
+    }
+    #button:hover{
+        box-shadow: 2px 2px rgb(0,0,0);
+    }
+</style>
+{% endblock %}
+<!--content part-->
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-sm-7">
+            <div class="card">
+                <div class="card-header" style="border-top-left-radius: 25px;">Staff Login</div>
+                    <div class="card-body"><br>
+
+    <div class="row justify-content-center">
+        <div class="col-sm-10">
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="basic-addon1"><i class="fa fa-envelope" style="font-size: 15px;"></i></span>
+                </div>
+                <input type="email" class="form-control" placeholder="E-Mail" aria-label="Username" aria-describedby="basic-addon1" required>
+              </div>                  
+        </div>
+    </div><br>
+
+    <div class="row justify-content-center">
+        <div class="col-sm-10">
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="basic-addon1"><i class="fa fa-lock" style="font-size: 20px;"></i></span></div>
+                <input type="password" class="form-control" placeholder="Password" aria-label="Username" aria-describedby="basic-addon1" required>
+              </div>              
+        </div>
+    </div><br>
+
+
+
+<div class="d-flex justify-content-center">
+    <input type="submit" value="Login" class="btn btn-success1" name="submit" id="button">
+</div><br>
+</div>
+</div>
+</div>
+</div><br><br>
+</div>
+
+
+{% endblock %}
