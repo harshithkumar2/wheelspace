@@ -79,7 +79,10 @@ def admlog():
 
 @app.route("/onlines_list")
 def onlines_list():
-    return render_template("onlines_list.html")
+    if "staff" in session or "admin" in session:
+        return render_template("onlines_list.html")
+    else:
+        return redirect(url_for("stafflog"))
 
 @app.route('/stafflog')
 def stafflog():
@@ -401,14 +404,17 @@ def confirm_booking():
         flash("some error occured","error")
         return redirect(url_for("userlog"))
 
-@app.route("/online_list",methods=["POST","GET"])
+@app.route("/online_list",methods=["POST","GET"])  #online booking list for admin and staff datewise
 def online_list():
-    db=mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    db.execute("select * from online_booking order by dates desc")
-    result = db.fetchall()
-    db.close()
-    if result is not None:
-        return render_template("onlines_list.html", data=result)
+    if "staff" in session or "admin" in session:
+        db=mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        db.execute("select * from online_booking order by dates desc")
+        result = db.fetchall()
+        db.close()
+        if result is not None:
+            return render_template("onlines_list.html", data=result)
+    else:
+        return redirect(url_for("stafflog"))
 
 @app.route('/logout_admin')
 def logout():
