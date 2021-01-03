@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 <!--title part-->
-{% block title %}Car Details{% endblock %}
+{% block title %}Booking{% endblock %}
 <!--head part-->
 {% block head %}
 {{ super() }}
@@ -33,12 +33,14 @@
 <!--content part-->
 {% block content %}
 <div class="container">
-    <form action="/off_data" method="post">
+    {% if data %}
+    <form action="/off_extend_data" method="post">
     <div class="row justify-content-center">
         <div class="col-sm-7">
             <div class="card">
                 <div class="card-header" style="border-top-left-radius: 25px;">Car Details</div>
                     <div class="card-body"><br>
+
 {% with messages= get_flashed_messages() %}
 {% if messages %}
 {% for msg in messages %}
@@ -46,54 +48,25 @@
 {% endfor %}
 {% endif %}
 {% endwith %}
-    <div class="row">
-        <div class="col-sm-11">
-            <label>Name:</label>
-            <input type="text" class="form-control" id="input" placeholder="Full Name" name="nam" required>
-        </div>
-        </div><br>
-    
 
-    <div class="row">
-        <div class="col-sm-11">
-            <label>E-mail:</label>
-            <input type="email" class="form-control" id="input" placeholder="example@gmail.com" name="mail" required>
-        </div>
-    </div><br>
-
-    <div class="row">
-        <div class="col-sm-11">
-            <label>Phone:</label>
-            <input type="number" class="form-control" id="input" placeholder="Enter Phone Number" name="phone" required>
-        </div>
-    </div><br>
-    
-
-    <div class="row">
-        <div class="col-sm-11">
-            <label>Vechile No.:</label>
-            <input type="text" class="form-control" id="input" placeholder="Enter Vechile Number" name="vech_no" required>
-        </div>
-    </div><br>
-
-    <div class="row">
-        <div class="col-sm-11">
-            <label>Vechile Type:</label>
-            <input type="text" class="form-control" id="input" placeholder="Enter Vechile Type" name="vech_type" required>
-        </div>
-    </div><br>
-    
     <div class="row">
         <div class="col-sm-11">
             <label>License No.:</label>
-            <input type="text" class="form-control" id="input" placeholder="Enter License No." name="lic_no" required>
+            <input type="text" class="form-control" id="input" placeholder="Enter License No." name="lic_no" value="{{data['license_no']}}" required readonly>
         </div>
     </div><br>
-    
+
+                        <div class="row">
+        <div class="col-sm-11">
+            <label>Date:</label>
+            <input type="date" class="form-control" id="input" placeholder="Enter Date" name="dat" required>
+        </div>
+    </div><br>
+
     <div class="row">
         <div class="col-sm-11">
             <label>Duration:</label>
-            <input type="text" class="form-control" id="input" placeholder="Enter Duration" name="dur" required>
+            <input type="text" class="form-control" id="input" placeholder="Enter Duration" name="dur" required >
         </div>
     </div><br><br>
 
@@ -108,6 +81,9 @@
 </div>
 </div><br><br>
     </form>
+    {% else %}
+    <p style="text-align:center;color:red;font-size:25px;">Some error occured</p>
+    {% endif %}
 </div>
 
 

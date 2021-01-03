@@ -1,0 +1,56 @@
+{% extends "layout.html" %}
+<!--title part-->
+{% block title %}Results{% endblock %}
+<!--head part-->
+{% block head %}
+{{ super() }}
+<style>
+
+</style>
+{% endblock %}
+<!--content part-->
+{% block content %}
+<div class="container">
+{% with messages= get_flashed_messages() %}
+{% if messages %}
+{% for msg in messages %}
+                        <p style="text-align:center;color:red;font-size:20px;">{{msg}}</p>
+{% endfor %}
+{% endif %}
+{% endwith %}
+    {% if data %}
+   <table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">License no</th>
+      <th scope="col">Name</th>
+        <th scope="col">Email</th>
+        <th scope="col">Phone</th>
+      <th scope="col">Vehicle no</th>
+        <th scope="col">Vehicle type</th>
+        <th scope="col">book</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    <tr>
+        <td>1</td>
+      <td>{{data['license_no']}}</td>
+        <td>{{data['name']}}</td>
+        <td>{{data['email']}}</td>
+        <td>{{data['phone']}}</td>
+        <td>{{data['vech_no']}}</td>
+        <td>{{data['vech_type']}}</td>
+        <td><a href="/book/{{data['license_no']}}"><button type="submit" class="btn btn-success">Book</button> </a> </td>
+    </tr>
+
+
+  </tbody>
+</table>
+    {% else %}
+    <p style="text-align:center;color:red;font-size:25px;">Data not found</p>
+  {% endif %}
+
+
+{% endblock %}

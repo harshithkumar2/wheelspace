@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+<!--title part-->
+{% block title %}Car Details{% endblock %}
+<!--head part-->
+{% block head %}
+{{ super() }}
+<style>
+
+</style>
+{% endblock %}
+<!--content part-->
+{% block content %}
+<div class="container">
+{% if "admin" in session and session["admin"] == True %}
+    <div class="col-sm-2">
+            <a href="/logout_admin"> <button type="submit" class="btn btn-success">Logout</button></a>
+        </div>
+    {% endif %}
+</div>
+
+
+{% endblock %}

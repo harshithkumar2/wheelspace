@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+<!--title part-->
+{% block title %}Booking list{% endblock %}
+<!--head part-->
+{% block head %}
+{{ super() }}
+<style>
+
+</style>
+{% endblock %}
+<!--content part-->
+{% block content %}
+<div class="container">
+    {% with messages= get_flashed_messages() %}
+{% if messages %}
+{% for msg in messages %}
+                        <p style="text-align:center;color:red;font-size:20px;">{{msg}}</p>
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+    <table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">license No</th>
+      <th scope="col">Vehicle No</th>
+      <th scope="col">Vehicle Type</th>
+      <th scope="col">Durations(in hrs)</th>
+         <th scope="col">Date</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for i in data %}
+
+    <tr>
+      <td>{{i["license_no"]}}</td>
+      <td>{{i["vech_no"]}}</td>
+        <td>{{i["vech_type"]}}</td>
+        <td>{{i["duration"]}}</td>
+        <td>{{i["dates"]}}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+</div>
+
+
+{% endblock %}

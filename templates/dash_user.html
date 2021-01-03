@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+<!--title part-->
+{% block title %}user dash{% endblock %}
+<!--head part-->
+{% block head %}
+{{ super() }}
+<style>
+
+</style>
+{% endblock %}
+<!--content part-->
+{% block content %}
+<div class="container">
+    {% with messages= get_flashed_messages() %}
+{% if messages %}
+{% for msg in messages %}
+                        <p style="text-align:center;color:red;font-size:20px;">{{msg}}</p>
+{% endfor %}
+{% endif %}
+{% endwith %}
+{% if "user" in session and session["user"] == True %}
+    <div class="col-sm-2">
+            <a href="/logout_user"> <button type="submit" class="btn btn-success">Logout</button></a>
+        </div>
+
+    <div class="col-sm-2">
+            <a href="/booking/{{session["lic_no"]}}"> <button type="submit" class="btn btn-success">Book</button></a>
+        </div>
+    {% endif %}
+</div>
+
+
+{% endblock %}

@@ -33,6 +33,7 @@
 <!--content part-->
 {% block content %}
 <div class="container">
+    <form action="/confirm_booking" method="post">
     <div class="row justify-content-center">
         <div class="col-sm-7">
             <div class="card">
@@ -42,28 +43,34 @@
     <div class="row">
         <div class="col-sm-11">
             <label>Vechile No.:</label>
-            <input type="text" class="form-control" id="input" placeholder="Enter Vechile Number" required>                    
+            <input type="text" class="form-control" id="input" placeholder="Enter Vechile Number" name="vech_no" required>
         </div>
     </div><br>
 
     <div class="row">
         <div class="col-sm-11">
             <label>Vechile Type:</label>
-            <input type="text" class="form-control" id="input" placeholder="Enter Vechile Type" required>                    
+            <input type="text" class="form-control" id="input" placeholder="Enter Vechile Type"  name="vech_type" required>
         </div>
     </div><br>
     
     <div class="row">
         <div class="col-sm-11">
             <label>License No.:</label>
-            <input type="text" class="form-control" id="input" placeholder="Enter License No." required>                    
+            <input type="text" class="form-control" id="input" placeholder="Enter License No." value="{{dat}}" name="lic_no" required readonly>
         </div>
     </div><br>
     
     <div class="row">
         <div class="col-sm-11">
             <label>Duration:</label>
-            <input type="text" class="form-control" id="input" placeholder="Enter Duration" required>                    
+            <input type="number" class="form-control" id="input" placeholder="Enter Duration in hrs"  name="dur" required>
+        </div>
+    </div><br>
+                        <div class="row">
+        <div class="col-sm-11">
+            <label>Date:</label>
+            <input type="date" class="form-control" id="input" placeholder="Enter Duration in hrs"  name="dat" required>
         </div>
     </div><br><br>
 
@@ -77,6 +84,7 @@
 </div>
 </div>
 </div><br><br>
+    </form>
 </div>
 
 

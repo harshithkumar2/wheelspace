@@ -37,19 +37,26 @@
 <!--content part-->
 {% block content %}
 <div class="container">
+    <form action="/user_log" method="post">
     <div class="row justify-content-center">
         <div class="col-sm-6">
             <div class="card">
                 <div class="card-header" style="border-top-left-radius: 25px;">User Login</div>
                     <div class="card-body"><br>
-
+{% with messages= get_flashed_messages() %}
+{% if messages %}
+{% for msg in messages %}
+                        <p style="text-align:center;color:red;font-size:20px;">{{msg}}</p>
+{% endfor %}
+{% endif %}
+{% endwith %}
     <div class="row justify-content-center">
         <div class="col-sm-10">
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
                   <span class="input-group-text" id="basic-addon1"><i class="fa fa-envelope" style="font-size: 15px;"></i></span>
                 </div>
-                <input type="email" class="form-control" placeholder="E-Mail" aria-label="Username" aria-describedby="basic-addon1" required>
+                <input type="email" class="form-control" placeholder="E-Mail" aria-label="Username" aria-describedby="basic-addon1" name="mail" required>
               </div>                  
         </div>
     </div><br>
@@ -59,7 +66,7 @@
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
                   <span class="input-group-text" id="basic-addon1"><i class="fa fa-lock" style="font-size: 20px;"></i></span></div>
-                <input type="password" class="form-control" placeholder="Password" aria-label="Username" aria-describedby="basic-addon1" required>
+                <input type="password" class="form-control" placeholder="Password" aria-label="Username" aria-describedby="basic-addon1" name="pass" required>
               </div>              
         </div>
     </div><br>
@@ -73,6 +80,7 @@
 </div>
 </div>
 </div><br><br>
+    </form>
 </div>
 
 
