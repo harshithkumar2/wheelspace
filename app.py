@@ -24,9 +24,23 @@ mysql = MySQL(app)
 def admreg():
     return render_template('admreg.html')
 
+@app.route('/offline_user_book_admin')
+def offline_user_book_admin():
+    if "admin" in session and session["admin"] == True:
+        return render_template('offline_user_book_admin.html')
+    else:
+        return redirect(url_for('admlog'))
+
 @app.route('/staffreg')
 def staffreg():
     return render_template('staffreg.html')
+
+@app.route('/staffreg_admin')
+def staffreg_admin():
+    if "admin" in session and session["admin"] == True:
+        return render_template('staffreg_admin.html')
+    else:
+        return redirect(url_for('admlog'))
 
 @app.route('/dash_staff')
 def dash_staff():
@@ -53,20 +67,59 @@ def dash_user():
 def search_results():
     return render_template('search_results.html')
 
+@app.route('/search_admin_results')
+def search_admin_results():
+    if "admin" in session and session["admin"] == True:
+        return render_template('search_admin_results.html')
+    else:
+        return redirect(url_for("admlog"))
+
+@app.route('/search_results_admin')
+def search_results_admin():
+    if "admin" in session and session["admin"] == True:
+        return render_template('search_results_admin.html')
+    else:
+        return redirect(url_for("admlog"))
+
+
 @app.route('/carreg')
 def carreg():
-    if "staff" in session or "admin" in session:
+    if "staff" in session and session["staff"]==True:
         return render_template('regcar.html')
     else:
         return redirect(url_for('stafflog'))
 
+@app.route('/carreg_admin')
+def carreg_admin():
+    if "admin" in session and session["admin"]==True:
+        return render_template('regcar_admin.html')
+    else:
+        return redirect(url_for('admlog'))
+
 @app.route('/regular_user')
 def regular():
-    return render_template('regular_user.html')
+    if "staff" in session and session["staff"] == True:
+        return render_template('regular_user.html')
+    else:
+        return redirect(url_for('stafflog'))
+
+@app.route('/regularadmin')
+def regular_admin():
+    if "admin" in session and session["admin"] == True:
+        return render_template('regular_user_admin.html')
+    else:
+        return redirect(url_for('admlog'))
 
 @app.route('/usereg')
 def usereg():
     return render_template('userreg.html')
+
+@app.route('/usereg_admin')
+def usereg_admin():
+    if "admin" in session and session["admin"] == True:
+        return render_template('userreg_admin.html')
+    else:
+        return redirect(url_for('admlog'))
 
 
 @app.route('/onlinereg')
@@ -113,7 +166,7 @@ def admin_data():
                 db.execute("INSERT INTO admin (email,name,password) VALUES (%s,%s,%s)",(email,name,hash_pas))
                 mysql.connection.commit()
                 db.close()
-                return render_template('admreg.html')
+                return redirect(url_for("admlog"))
             else:
                 flash("Password did not match", "error")
                 return redirect(url_for('admreg'))
@@ -143,7 +196,7 @@ def staff_data():
                 db.execute("insert into staff (name,email,phone,password) values(%s,%s,%s,%s)",(name,mail,phone,hash_pas))
                 mysql.connection.commit()
                 db.close()
-                return render_template('staffreg.html')
+                return redirect(url_for("stafflog"))
             else:
                 flash("Password did not match", "error")
                 return redirect(url_for('staffreg'))
@@ -151,7 +204,38 @@ def staff_data():
         flash("Some error occured try again","error")
         return redirect(url_for('staffreg'))
 
-@app.route('/off_data',methods=['POST'])  # first time offline data registration
+@app.route('/staff_data_admin',methods=['POST'])            #staff registration form data for admin dashboard
+def staff_data_admin():
+    if request.method == 'POST':
+        name = request.form['nam']
+        mail = request.form['mail']
+        phone = request.form['phone']
+        pas = request.form['pass']
+        rpas = request.form['repass']
+        db = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        db.execute("select email from staff where email=%s",(mail,))
+        result = db.fetchone()
+        if result is not None:
+            flash("Email already taken","error")
+            db.close()
+            return redirect(url_for("staffreg_admin"))
+        else:
+            if pas == rpas:
+                hash_pas = sha256_crypt.hash(pas)
+                db = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                db.execute("insert into staff (name,email,phone,password) values(%s,%s,%s,%s)",(name,mail,phone,hash_pas))
+                mysql.connection.commit()
+                db.close()
+                flash("Staff registration successfull","success")
+                return redirect(url_for("dash_admin"))
+            else:
+                flash("Password did not match", "error")
+                return redirect(url_for('staffreg_admin'))
+    else:
+        flash("Some error occured try again","error")
+        return redirect(url_for('staffreg_admin'))
+
+@app.route('/off_data',methods=['POST'])  # first time offline data registration for staff dashboard
 def off_data():
     if request.method == 'POST':
         name = request.form['nam']
@@ -189,6 +273,44 @@ def off_data():
         flash("some error occured","error")
         return redirect(url_for('stafflog'))
 
+@app.route('/off_data_admin',methods=['POST'])  # first time offline data registration for admin dashboard
+def off_data_admin():
+    if request.method == 'POST':
+        name = request.form['nam']
+        mail = request.form['mail']
+        phone = request.form['phone']
+        vech_no = request.form['vech_no']
+        vech_type = request.form['vech_type']
+        lic_no = request.form['lic_no']
+        duration = request.form['dur']
+        db = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        db.execute("select license_no from offline_user where license_no=%s",(lic_no,))
+        result = db.fetchone()
+        #print(result)
+        if result is not None:
+            flash("License Number used","error")
+            db.close()
+            return redirect(url_for('carreg_admin'))
+        else:
+            db = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            db.execute("select email from offline_user where email=%s", (mail,))
+            result1 = db.fetchone()
+            if result1 is not None:
+                flash("Email already used","error")
+                db.close()
+                return redirect(url_for('carreg_admin'))
+            else:
+
+                db = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                db.execute("insert into offline_user values (%s,%s,%s,%s,%s,%s,%s)",(lic_no,name,mail,phone,vech_no,vech_type,duration))
+                mysql.connection.commit()
+                db.close()
+                flash("Data inserted successfully","success")
+                return redirect(url_for('dash_admin'))
+    else:
+        flash("some error occured","error")
+        return redirect(url_for('admlog'))
+
 
 @app.route('/off_extend_data', methods=["POST"])  #for multiple offline booking
 def off_extend_user():
@@ -211,6 +333,28 @@ def off_extend_user():
     else:
         flash("Some error occured", "error")
         return redirect(url_for('stafflog'))
+
+@app.route('/off_extend_data_admin', methods=["POST"])  #for multiple offline booking for admin dashboard
+def off_extend_user_data():
+    if request.method == 'POST':
+        lic_no = request.form['lic_no']
+        date = request.form['dat']
+        duration = request.form['dur']
+        db = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        #db.execute("select license_no from offline_user where license_no=%s",(lic_no,))
+        #result = db.fetchone()
+        try:
+            db.execute("insert into offline_extended (license_no,dates,duration)values (%s,%s,%s)",(lic_no,date,duration))
+            mysql.connection.commit()
+            db.close()
+            flash("Parking Booked Successfully","success")
+            return redirect(url_for('dash_admin'))
+        except MySQLdb._exceptions.IntegrityError:  #since license no is primary key in offline_user and foreign key in offline_extended table both license no should match
+            flash("Insert a valid license number","error")
+            return redirect(url_for('regular_admin'))
+    else:
+        flash("Some error occured", "error")
+        return redirect(url_for('admlog'))
 
 
 @app.route('/admin_log', methods=['POST'])  #admin login
@@ -269,7 +413,7 @@ def staff_log():
         return redirect(url_for('stafflog'))
 
 
-@app.route('/search_data', methods=['POST'])  #to search users license no and book slot for offline users
+@app.route('/search_data', methods=['POST'])  #to search users license no and book slot for offline users staff
 def search_data():
     if request.method == 'POST':
         query = request.form['search']
@@ -279,7 +423,18 @@ def search_data():
         db.close()
         return render_template('search_results.html',data=result)
 
-@app.route('/book/<string:id>')  #books slot for offlne users
+
+@app.route('/search_data_admin', methods=['POST'])  #to search users license no and book slot for offline users  for admin dashboard
+def search_data_admin():
+    if request.method == 'POST':
+        query = request.form['search']
+        db = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        db.execute("select * from offline_user where license_no=%s",(query,))
+        result = db.fetchone()
+        db.close()
+        return render_template('search_results_admin.html',data=result)
+
+@app.route('/book/<string:id>')  #books slot for offlne users for staff dashboard
 def book(id):
     d = id
     db = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -291,7 +446,20 @@ def book(id):
     else:
         return redirect(url_for('stafflog'))
 
-@app.route("/online_data",methods=['POST'])          #online user registration
+
+@app.route('/book_admin/<string:id>')  #books slot for offlne users for admin dashboard
+def book_admin(id):
+    d = id
+    db = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    db.execute("select license_no from offline_user where license_no=%s",([d]))  #[d] bcz tuple is not iteratable so used list to traverse
+    result = db.fetchone()
+    db.close()
+    if result is not None:
+        return render_template('regular_user_admin.html',data = result)
+    else:
+        return redirect(url_for('admlog'))
+
+@app.route("/online_data",methods=['POST'])          #online user registration for all users
 def online_data():
     if request.method == 'POST':
         name = request.form['nam']
@@ -327,6 +495,46 @@ def online_data():
                 else:
                     flash("Password did not match","error")
                     return redirect(url_for("usereg"))
+    else:
+        flash("Some error occured", "error")
+        return redirect(url_for("usereg"))
+
+@app.route("/online_data_admin",methods=['POST'])          #online user registration for admin dashboard
+def online_data_admin():
+    if request.method == 'POST':
+        name = request.form['nam']
+        email = request.form['mail']
+        phone = request.form['phone']
+        lic_no = request.form['lic_no']
+        pas = request.form['pass']
+        rpas = request.form['repass']
+        db = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        db.execute("select email from online_user where license_no=%s",(lic_no,))
+        result = db.fetchone()
+        db.close()
+        if result is not None:
+            flash("License number is already used","error")
+            return redirect(url_for('usereg_admin'))
+        else:
+            db = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            db.execute("select email from online_user where email=%s", (email,))
+            result = db.fetchone()
+            db.close()
+            if result is not None:
+                flash("Email is already used", "error")
+                return redirect(url_for('usereg_admin'))
+            else:
+                if pas == rpas:
+                    hash_pas = sha256_crypt.hash(pas)
+                    db = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                    db.execute("insert into online_user values(%s,%s,%s,%s,%s)",(lic_no,name,email,phone,hash_pas))
+                    mysql.connection.commit()
+                    db.close()
+                    flash("User Registration successfull","success")
+                    return redirect(url_for('dash_admin'))
+                else:
+                    flash("Password did not match","error")
+                    return redirect(url_for("usereg_admin"))
     else:
         flash("Some error occured", "error")
         return redirect(url_for("usereg"))
@@ -415,6 +623,37 @@ def online_list():
             return render_template("onlines_list.html", data=result)
     else:
         return redirect(url_for("stafflog"))
+
+@app.route("/search_admin_data",methods=["POST"])   #search bar data for admin
+def search_admin_data():
+    if "admin" in session and session["admin"] == True:
+        if request.method == 'POST':
+            query = request.form["search"]
+            db = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            db.execute("select * from online_user where license_no=%s",(query,))
+            result = db.fetchone()
+            db.close()
+            if result is not None:
+                return render_template("search_admin_results.html",data=result)
+            else:
+                db = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                db.execute("select * from offline_user where license_no=%s", (query,))
+                result = db.fetchone()
+                db.close()
+                if result is not None:
+                    return render_template("search_admin_results.html", data=result)
+                else:
+                    db = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                    db.execute("select * from staff where name=%s", (query,))
+                    result = db.fetchone()
+                    db.close()
+                    if result is not None:
+                        return render_template("search_admin_results.html", data=result)
+                    else:
+                        return redirect(url_for("search_admin_results"))
+    else:
+        return redirect(url_for("admlog"))
+
 
 @app.route('/logout_admin')
 def logout():

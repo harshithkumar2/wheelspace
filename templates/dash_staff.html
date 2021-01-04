@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 <!--title part-->
-{% block title %}Car Details{% endblock %}
+{% block title %}staff dash{% endblock %}
 <!--head part-->
 {% block head %}
 {{ super() }}
@@ -51,14 +51,15 @@
         </div><br>
 
     </form>
-    {% if "staff" in session and session["staff"] == True %}
         <div class="col-sm-2">
             <a href="/logout_staff"> <button type="submit" class="btn btn-success">Logout</button></a>
         </div>
     <div class="col-sm-2">
-            <a href="/online_list"> <button type="submit" class="btn btn-success">Online booking</button></a>
+            <a href="/online_list"> <button type="submit" class="btn btn-success">Online booking list</button></a>
         </div>
-    {% endif %}
+    <div class="col-sm-2">
+            <a href="/carreg"> <button type="submit" class="btn btn-success">first time offline user reg</button></a>
+        </div>
 
 </div>
 
