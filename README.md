@@ -1,5 +1,5 @@
 # wheelspace
-## Wheelspace is an web application for parking slot System where an user can book parking both online and offline.
+## Wheelspace is an web application for parking slot System where an user can book parking through both online and offline.
 ### Admin has the power to view,edit,delete and update data from database.
 ### Staff has the power to book parking slot for offline users.
 
