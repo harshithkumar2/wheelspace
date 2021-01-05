@@ -654,6 +654,162 @@ def search_admin_data():
     else:
         return redirect(url_for("admlog"))
 
+@app.route("/online_list_edit")  #display all online users to the admin
+def online_list_edit():
+    if "admin" in session and session["admin"]==True:
+        db = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        db.execute("select * from online_user")
+        result = db.fetchall()
+        db.close()
+        return render_template("online_list_edit.html",data=result)
+    else:
+        return redirect(url_for("admlog"))
+
+@app.route("/edit/<id>")  #display data of selected user for editing admin dashboard
+def online_edit(id):
+    if "admin" in session and session["admin"] ==True:
+        lic = id
+        db = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        db.execute("select * from online_user where license_no=%s",(lic,))
+        result = db.fetchone()
+        db.close()
+        return render_template("online_data_edit.html",data=result)
+    else:
+        return redirect(url_for("admlog"))
+@app.route("/online_user_data_update/<id>",methods=["POST"]) #update edited online user data
+def online_user_data_update(id):
+    if "admin" in session and session["admin"]==True:
+        lic = id
+        name = request.form["nam"]
+        mail = request.form["mail"]
+        phone = request.form["phone"]
+        db = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        db.execute("update online_user set name=%s,email=%s,phone=%s where license_no=%s", (name,mail,phone,lic))
+        mysql.connection.commit()
+        db.close()
+        flash("Online User data updated Successfully","success")
+        return redirect(url_for("dash_admin"))
+    else:
+        return redirect(url_for("admlog"))
+
+
+@app.route("/delete/<id>")  #delete online user records from db admin dashboard
+def online_delete(id):
+    if "admin" in session and session["admin"] ==True:
+        lic = id
+        db = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        db.execute("delete from online_user where license_no=%s",(lic,))
+        mysql.connection.commit()
+        db.close()
+        flash("User deleted Successfully","success")
+        return redirect(url_for("dash_admin"))
+    else:
+        return redirect(url_for("admlog"))
+
+@app.route("/offline_list_edit")  #display all offline users to the admin (offline users)
+def offline_list_edit():
+    if "admin" in session and session["admin"]==True:
+        db = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        db.execute("select * from offline_user")
+        result = db.fetchall()
+        db.close()
+        return render_template("offline_list_edit.html",data=result)
+    else:
+        return redirect(url_for("admlog"))
+
+@app.route("/edit_offline/<id>")  #display data of selected user for editing admin dashboard(offline users)
+def offline_edit(id):
+    if "admin" in session and session["admin"] ==True:
+        lic = id
+        db = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        db.execute("select * from offline_user where license_no=%s",(lic,))
+        result = db.fetchone()
+        db.close()
+        return render_template("offline_data_edit.html",data=result)
+    else:
+        return redirect(url_for("admlog"))
+@app.route("/offline_user_data_update/<id>",methods=["POST"]) #update edited offline user data
+def offline_user_data_update(id):
+    if "admin" in session and session["admin"]==True:
+        lic = id
+        name = request.form["nam"]
+        mail = request.form["mail"]
+        phone = request.form["phone"]
+        db = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        db.execute("update offline_user set name=%s,email=%s,phone=%s where license_no=%s", (name,mail,phone,lic))
+        mysql.connection.commit()
+        db.close()
+        flash("Offline User data updated Successfully","success")
+        return redirect(url_for("dash_admin"))
+    else:
+        return redirect(url_for("admlog"))
+
+
+@app.route("/delete_offline/<id>")  #delete offline user records from db admin dashboard
+def offline_delete(id):
+    if "admin" in session and session["admin"] ==True:
+        lic = id
+        db = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        db.execute("delete from offline_user where license_no=%s",(lic,))
+        mysql.connection.commit()
+        db.close()
+        flash("User deleted Successfully","success")
+        return redirect(url_for("dash_admin"))
+    else:
+        return redirect(url_for("admlog"))
+
+@app.route("/staff_list_edit")  #display all staff users to the admin (staff users)
+def staff_list_edit():
+    if "admin" in session and session["admin"]==True:
+        db = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        db.execute("select * from staff")
+        result = db.fetchall()
+        db.close()
+        return render_template("staff_list_edit.html",data=result)
+    else:
+        return redirect(url_for("admlog"))
+
+@app.route("/edit_staff/<int:id>")  #display data of staff  for editing admin dashboard
+def staff_edit(id):
+    if "admin" in session and session["admin"] ==True:
+        lic = id
+        db = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        db.execute("select * from staff where staff_id=%s",(lic,))
+        result = db.fetchone()
+        db.close()
+        return render_template("staff_data_edit.html",data=result)
+    else:
+        return redirect(url_for("admlog"))
+@app.route("/staff_user_data_update/<int:id>",methods=["POST"]) #update edited staff user data
+def staff_user_data_update(id):
+    if "admin" in session and session["admin"]==True:
+        lic = id
+        name = request.form["nam"]
+        mail = request.form["mail"]
+        phone = request.form["phone"]
+        db = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        db.execute("update staff set name=%s,email=%s,phone=%s where staff_id=%s", (name,mail,phone,lic))
+        mysql.connection.commit()
+        db.close()
+        flash("Staff data updated Successfully","success")
+        return redirect(url_for("dash_admin"))
+    else:
+        return redirect(url_for("admlog"))
+
+
+@app.route("/delete_staff/<int:id>")  #delete staff user records from db admin dashboard
+def staff_delete(id):
+    if "admin" in session and session["admin"] ==True:
+        lic = id
+        db = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        db.execute("delete from staff where staff_id=%s",(lic,))
+        mysql.connection.commit()
+        db.close()
+        flash("Staff deleted Successfully","success")
+        return redirect(url_for("dash_admin"))
+    else:
+        return redirect(url_for("admlog"))
+
 
 @app.route('/logout_admin')
 def logout():
@@ -669,8 +825,6 @@ def logout_staff():
 def logout_user():
     session.clear()
     return redirect(url_for('userlog'))
-
-
 
 
 if __name__ == '__main__':

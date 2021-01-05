@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+<!--title part-->
+{% block title %}Offline Results{% endblock %}
+<!--head part-->
+{% block head %}
+{{ super() }}
+<style>
+
+</style>
+{% endblock %}
+<!--content part-->
+{% block content %}
+<div class="container">
+{% with messages= get_flashed_messages() %}
+{% if messages %}
+{% for msg in messages %}
+                        <p style="text-align:center;color:red;font-size:20px;">{{msg}}</p>
+{% endfor %}
+{% endif %}
+{% endwith %}
+    {% if data %}
+   <table class="table table-hover">
+  <thead>
+
+    <tr>
+
+      <th scope="col">License no</th>
+      <th scope="col">Name</th>
+        <th scope="col">Email</th>
+        <th scope="col">Phone</th>
+        <th scope="col">Edit</th>
+        <th scope="col">Delete</th>
+    </tr>
+  </thead>
+  <tbody>
+{% for datas in data %}
+    <tr>
+      <td>{{datas['license_no']}}</td>
+        <td>{{datas['name']}}</td>
+        <td>{{datas['email']}}</td>
+        <td>{{datas['phone']}}</td>
+        <td><a href="/edit_offline/{{datas['license_no']}}"><button type="submit" class="btn btn-success">Edit</button> </a> </td>
+        <td><a href="/delete_offline/{{datas['license_no']}}"><button type="submit" class="btn btn-success">Delete</button> </a> </td>
+    </tr>
+
+{% endfor %}
+  </tbody>
+</table>
+    {% else %}
+    <p style="text-align:center;color:red;font-size:25px;">Data not found</p>
+  {% endif %}
+
+
+{% endblock %}
