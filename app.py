@@ -4,6 +4,7 @@ import os
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
 from passlib.hash import sha256_crypt
+from flask_mail import Mail,Message
 
 app = Flask(__name__)
 
@@ -16,6 +17,15 @@ app.config['MYSQL_USER'] = data["db_user"]
 app.config['MYSQL_PASSWORD'] = data["password"]
 app.config['MYSQL_DB'] = data["db_name"]
 app.config['MYSQL_PORT'] = data["port"]
+
+#For mail system
+app.config['MAIL_SERVER']= data["mail_host"]
+app.config['MAIL_PORT'] = data["mail_port"]
+app.config['MAIL_USERNAME'] = data["mail_username"]
+app.config['MAIL_PASSWORD'] = data["mail_pass"]
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+mail = Mail(app)
 
 mysql = MySQL(app)
 
@@ -826,6 +836,34 @@ def logout_user():
     session.clear()
     return redirect(url_for('userlog'))
 
+@app.route('/user_mail',methods=["POST"]) #query related booking
+def user_mail():
+    if request.method == 'POST':
+        data = request.form["mail"]
+        msg = Message("[BOOKING] related Query",sender="Wheelspace@gmail.com",recipients=["harshithkumar40@gmail.com"])
+        msg.body = data
+        mail.send(msg)
+        return redirect(url_for("dash_user"))
+
+@app.route('/all_mail',methods=["POST"])  #general query help line
+def all_mail():
+    if request.method == 'POST':
+        data = request.form["mail"]
+        msg = Message("[GENERAL] Queries",sender="Wheelspace@gmail.com",recipients=["harshithkumar40@gmail.com"])
+        msg.body = data
+        mail.send(msg)
+        return redirect(url_for("/"))
+
+@app.route('/history/<id>') #history to track of users booking with date and vehicles
+def history(id):
+    if "user" in session and session["user"] == True:
+        data = id
+        db = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        db.execute("select * from online_booking where license_no=%s",(data,))
+        result = db.fetchall()
+        return render_template("history_user.html",data=result)
+    else:
+        return redirect(url_for("userlog"))
 
 if __name__ == '__main__':
     app.run(debug=True)

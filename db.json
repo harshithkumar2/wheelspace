@@ -4,6 +4,10 @@
     "port": 3306,
     "db_name": "wheelspace",
     "password": "",
-    "db_user": "root"
+    "db_user": "root",
+    "mail_host": "smtp.gmail.com",
+    "mail_port": 465,
+    "mail_username": "waduhek480@gmail.com",
+    "mail_pass": "zafcergszejpjlsv"
   }
 }

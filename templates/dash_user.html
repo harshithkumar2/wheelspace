@@ -26,7 +26,15 @@
     <div class="col-sm-2">
             <a href="/booking/{{session["lic_no"]}}"> <button type="submit" class="btn btn-success">Book</button></a>
         </div>
+    <div class="col-sm-2">
+            <a href="/history/{{session["lic_no"]}}"> <button type="submit" class="btn btn-success">Booking history</button></a>
+        </div>
     {% endif %}
+
+    <form action="/user_mail" method="post">
+        <input type="text" placeholder="Any queries?" name="mail">
+        <button type="submit">Send</button>
+    </form>
 </div>
 
 
